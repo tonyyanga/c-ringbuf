@@ -31,12 +31,28 @@
  * intended.
  */
 
-struct ringbuf_t
+struct __attribute__((__packed__)) ringbuf_t
 {
     uint8_t *buf;
     uint8_t *head, *tail;
     size_t size;
 };
+
+size_t
+get_buf_size(size_t capacity) {
+    return sizeof(struct ringbuf_t) + capacity + 1;
+}
+
+ringbuf_t
+ringbuf_placement_new(size_t capacity, void* buf, size_t bufsize) {
+    assert(bufsize >= get_buf_size(capacity));
+
+    ringbuf_t rb = buf;
+    rb->size = capacity + 1;
+    rb->buf = (uint8_t*) buf + sizeof(ringbuf_t);
+    ringbuf_reset(rb);
+    return rb;
+}
 
 ringbuf_t
 ringbuf_new(size_t capacity)

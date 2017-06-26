@@ -1,3 +1,5 @@
 *.o
 *~
 ringbuf-test
+
+*.swp

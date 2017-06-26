@@ -31,6 +31,19 @@
 
 typedef struct ringbuf_t *ringbuf_t;
 
+size_t
+get_buf_size(size_t capacity);
+
+/*
+ * Create a new ring buffer with the given capacity (usable
+ * bytes) in the provided buffer. bufsize should be bigger then
+ * get_buf_size(capacity).
+ *
+ * Returns the new ring buffer object.
+ */
+ringbuf_t
+ringbuf_placement_new(size_t capacity, void* buf, size_t bufsize);
+
 /*
  * Create a new ring buffer with the given capacity (usable
  * bytes). Note that the actual internal buffer size may be one or
