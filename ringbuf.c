@@ -49,7 +49,7 @@ ringbuf_placement_new(size_t capacity, void* buf, size_t bufsize) {
 
     ringbuf_t rb = buf;
     rb->size = capacity + 1;
-    rb->buf = (uint8_t*) buf + sizeof(ringbuf_t);
+    rb->buf = (uint8_t*) buf + sizeof(struct ringbuf_t);
     ringbuf_reset(rb);
     return rb;
 }

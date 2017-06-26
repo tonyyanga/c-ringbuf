@@ -9,6 +9,7 @@
 #include "ringbuf.h"
 
 #define RINGBUF_CAPACITY 65536
+#define MMAP_ADDRESS 0x800000
 
 int main() {
     int shm = shm_open("spsc", O_CREAT | O_RDWR, 0666);
@@ -18,11 +19,11 @@ int main() {
 
     assert(ftruncate(shm, length) != -1);
 
-    uint8_t* buf = (uint8_t*) mmap(NULL, length, PROT_READ|PROT_WRITE, MAP_SHARED, shm, 0);
+    uint8_t* buf = (uint8_t*) mmap(MMAP_ADDRESS, length, PROT_READ|PROT_WRITE, MAP_SHARED | MAP_FIXED, shm, 0);
     
     assert(buf != MAP_FAILED);
 
-    ringbuf_t r_buf = ringbuf_placement_new(RINGBUF_CAPACITY, buf, length);
+    ringbuf_t r_buf = ringbuf_placement_new(RINGBUF_CAPACITY, buf + sizeof(uint8_t), length);
 
     // status = 0 => nobody reading / writing
     // status = 1 => buffer is full, allow read only
